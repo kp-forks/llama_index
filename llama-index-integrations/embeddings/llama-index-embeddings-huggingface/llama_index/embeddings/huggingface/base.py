@@ -267,7 +267,7 @@ class HuggingFaceEmbedding(MultiModalEmbedding):
         Returns:
             List[float]: numpy array of embeddings
         """
-        return self._embed(query, prompt_name="query")
+        return self._embed([query], prompt_name="query")[0]
 
     async def _aget_query_embedding(self, query: str) -> List[float]:
         """
@@ -279,7 +279,7 @@ class HuggingFaceEmbedding(MultiModalEmbedding):
         Returns:
             List[float]: numpy array of embeddings
         """
-        return self._get_query_embedding(query)
+        return await asyncio.to_thread(self._get_query_embedding, query)
 
     async def _aget_text_embedding(self, text: str) -> List[float]:
         """
@@ -291,7 +291,7 @@ class HuggingFaceEmbedding(MultiModalEmbedding):
         Returns:
             List[float]: numpy array of embeddings
         """
-        return self._get_text_embedding(text)
+        return await asyncio.to_thread(self._get_text_embedding, text)
 
     def _get_text_embedding(self, text: str) -> List[float]:
         """
@@ -303,7 +303,7 @@ class HuggingFaceEmbedding(MultiModalEmbedding):
         Returns:
             List[float]: numpy array of embeddings
         """
-        return self._embed(text, prompt_name="text")
+        return self._embed([text], prompt_name="text")[0]
 
     def _get_text_embeddings(self, texts: List[str]) -> List[List[float]]:
         """
